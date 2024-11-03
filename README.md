@@ -1,9 +1,3 @@
-# spring-boot-user-registration-and-Login
+## PROJECT VIDEO LINK
 
-What we have to build?
-
-We have build two main functionalities:
-
-Register user (stored data into MySQL database). 
-Login Authentication - validate user login credentials with database email and password. 
-We will secure the Registered Users Page with role-based Spring Security.
+https://drive.google.com/file/d/135axmmqHXUMt-okzFUrEv-FzXfHpxGVA/view?usp=sharing
