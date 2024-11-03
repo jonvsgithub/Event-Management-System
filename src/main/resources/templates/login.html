@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMS - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #0f0c29;
+            background: linear-gradient(135deg, #24243e, #302b63, #0f0c29);
+            font-family: 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 8s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) translateX(0);
+            }
+            25% {
+                transform: translateY(-20px) translateX(10px);
+            }
+            50% {
+                transform: translateY(-35px) translateX(-10px);
+            }
+            75% {
+                transform: translateY(-20px) translateX(10px);
+            }
+        }
+
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 2rem;
+            width: 100%;
+            max-width: 450px;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+            animation: cardFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0) rotateX(0) rotateY(0); }
+            50% { transform: translateY(-10px) rotateX(2deg) rotateY(2deg); }
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            border: none;
+            background: transparent;
+            position: relative;
+        }
+
+        .logo-container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            padding: 10px;
+            margin-bottom: 1rem;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .card-header h2 {
+            color: white;
+            font-size: 1.8rem;
+            margin-top: 1rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            padding: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 15px rgba(255,255,255,0.1);
+        }
+
+        .form-label {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .btn-login {
+            background: linear-gradient(45deg, #7928CA, #FF0080);
+            border: none;
+            border-radius: 10px;
+            padding: 0.8rem;
+            color: white;
+            font-weight: 600;
+            width: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-login:hover:before {
+            left: 100%;
+        }
+
+        .alert {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.2);
+            border-color: rgba(220, 53, 69, 0.3);
+        }
+
+        .alert-success {
+            background: rgba(40, 167, 69, 0.2);
+            border-color: rgba(40, 167, 69, 0.3);
+        }
+
+        .links-container {
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+
+        .auth-link {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            padding-bottom: 2px;
+        }
+
+        .auth-link:after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, #7928CA, #FF0080);
+            transition: width 0.3s ease;
+        }
+
+        .auth-link:hover:after {
+            width: 100%;
+        }
+
+        ::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 576px) {
+            .glass-card {
+                padding: 1.5rem;
+            }
+
+            .card-header h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="particles" id="particles"></div>
+
+<div class="login-container">
+    <div class="glass-card animate__animated animate__fadeIn">
+        <div th:if="${param.error}" class="animate__animated animate__shakeX">
+            <div class="alert alert-danger">Invalid Email or Password</div>
+        </div>
+        <div th:if="${param.logout}" class="animate__animated animate__fadeIn">
+            <div class="alert alert-success">You have been logged out.</div>
+        </div>
+
+        <div class="card-header">
+            <div class="logo-container">
+                <img src="/api/placeholder/80/80" alt="Logo" class="rounded-circle" width="80" height="80"/>
+            </div>
+            <h2>Welcome Back</h2>
+        </div>
+
+        <form method="post" role="form" th:action="@{/login}" class="animate__animated animate__fadeIn animate__delay-1s">
+            <div class="mb-4">
+                <label for="username" class="form-label">Email Address</label>
+                <input type="text" id="username" name="username" class="form-control"
+                       placeholder="Enter your email" required />
+            </div>
+
+            <div class="mb-4">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" name="password" class="form-control"
+                       placeholder="Enter your password" required />
+            </div>
+
+            <button type="submit" class="btn btn-login">Sign In</button>
+
+            <div class="links-container">
+                <div class="mb-3">
+                    <span style="color: rgba(255,255,255,0.6);">New here? </span>
+                    <a th:href="@{/register}" class="auth-link">Create Account</a>
+                </div>
+                <a th:href="@{/forgot-password}" class="auth-link">Forgot Password?</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Create floating particles
+    function createParticles() {
+        const particles = document.getElementById('particles');
+        const particleCount = 50;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+
+            // Random size between 3 and 8 pixels
+            const size = Math.random() * 5 + 3;
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+
+            // Random position
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+
+            // Random animation delay
+            particle.style.animationDelay = `${Math.random() * 5}s`;
+
+            particles.appendChild(particle);
+        }
+    }
+
+    // Initialize particles on load
+    document.addEventListener('DOMContentLoaded', createParticles);
+</script>
+</body>
+</html>

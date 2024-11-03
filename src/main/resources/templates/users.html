@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EVENT MANAGEMENT SYSTEM - Attendees</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2D3436;
+            --accent-color: #6c5ce7;
+        }
+
+        body {
+            background: linear-gradient(135deg, #a8c0ff, #3f2b96);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            color: #ffffff;
+        }
+
+        /* Main Content Wrapper */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            padding: 20px;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .nav-link {
+            color: white !important;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Table Container */
+        .table-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Table Styling */
+        .table {
+            color: white;
+            margin-bottom: 0;
+        }
+
+        .table thead th {
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            font-weight: 600;
+        }
+
+        .table tbody tr {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Search Bar */
+        .form-control {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 8px;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-control:focus {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: var(--accent-color);
+            color: white;
+            box-shadow: none;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--accent-color);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        .btn-danger {
+            background: rgba(231, 76, 60, 0.9);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        /* Pagination */
+        .pagination .page-link {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            margin: 0 3px;
+            border-radius: 8px;
+        }
+
+        .pagination .page-link:hover {
+            background: var(--accent-color);
+            color: white;
+        }
+
+        .pagination .active .page-link {
+            background: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .table-container {
+                padding: 10px;
+            }
+
+            .table thead {
+                display: none;
+            }
+
+            .table tbody tr {
+                display: block;
+                margin-bottom: 15px;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 8px;
+                padding: 10px;
+            }
+
+            .table td {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 0;
+                border: none;
+            }
+
+            .table td::before {
+                content: attr(data-label);
+                font-weight: bold;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/}">
+            <img src="/api/placeholder/40/40" alt="logo" class="me-2"/>
+            EMS
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/dashboard}" th:text="#{dashboard}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/logout}" th:text="#{logout}">Logout</a>
+                </li>
+            </ul>
+            <div class="dropdown">
+                <button class="btn btn-link nav-link dropdown-toggle" type="button" id="languageDropdown" data-bs-toggle="dropdown">
+                    <span th:text="${#locale.language == 'en' ? 'English' : #locale.language == 'rw' ? 'Kinyarwanda' : 'Français'}"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" th:href="@{''(lang=en)}">English</a></li>
+                    <li><a class="dropdown-item" th:href="@{''(lang=rw)}">Kinyarwanda</a></li>
+                    <li><a class="dropdown-item" th:href="@{''(lang=fr)}">Français</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="main-content">
+    <div class="container">
+        <h1 class="text-center mb-4" th:text="#{registered_players}">Registered Attendees</h1>
+
+        <div class="table-container">
+            <!-- Alerts -->
+            <div th:if="${messageError}" class="alert alert-danger" th:text="${messageError}"></div>
+            <div th:if="${messageSuccess}" class="alert alert-success" th:text="${messageSuccess}"></div>
+
+            <!-- Search Form -->
+            <form th:action="@{/users}" method="get" class="mb-4">
+                <div class="input-group">
+                    <input type="text" class="form-control" th:placeholder="#{search_placeholder}" name="search" th:value="${search}">
+                    <button class="btn btn-primary" type="submit" th:text="#{search}">Search</button>
+                </div>
+            </form>
+
+            <!-- Table -->
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th><a th:href="@{/users(sort='firstName', dir=${sortField == 'firstName' ? reverseSortDir : 'asc'})}" th:text="#{firstName}">First Name</a></th>
+                        <th><a th:href="@{/users(sort='lastName', dir=${sortField == 'lastName' ? reverseSortDir : 'asc'})}" th:text="#{lastName}">Last Name</a></th>
+                        <th><a th:href="@{/users(sort='email', dir=${sortField == 'email' ? reverseSortDir : 'asc'})}" th:text="#{email}">Email</a></th>
+                        <th><a th:href="@{/users(sort='roles[0].name', dir=${sortField == 'roles[0].name' ? reverseSortDir : 'asc'})}" th:text="#{role}">Role</a></th>
+                        <th><a th:href="@{/users(sort='phoneNumber', dir=${sortField == 'phoneNumber' ? reverseSortDir : 'asc'})}" th:text="#{phoneNumber}">Phone Number</a></th>
+                        <th><a th:href="@{/users(sort='dateOfBirth', dir=${sortField == 'dateOfBirth' ? reverseSortDir : 'asc'})}" th:text="#{dateOfBirth}">Date of Birth</a></th>
+                        <th th:text="#{actions}">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user: ${users}">
+                        <td data-label="First Name" th:text="${user.firstName}"></td>
+                        <td data-label="Last Name" th:text="${user.lastName}"></td>
+                        <td data-label="Email" th:text="${user.email}"></td>
+                        <td data-label="Role" th:text="${user.roles[0].name}"></td>
+                        <td data-label="Phone" th:text="${user.phoneNumber}"></td>
+                        <td data-label="Date of Birth" th:text="${#temporals.format(user.dateOfBirth, 'dd-MM-yyyy')}"></td>
+                        <td data-label="Actions">
+                            <a th:href="@{/users/edit/{id}(id=${user.id})}" class="btn btn-primary btn-sm" th:text="#{edit}">Edit</a>
+                            <a th:href="@{/users/delete/{id}(id=${user.id})}" class="btn btn-danger btn-sm"
+                               th:onclick="'return confirm(\'' + #{delete_confirmation} + '\')'" th:text="#{delete}">Delete</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <nav aria-label="Page navigation" class="mt-4">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                        <a class="page-link" th:href="@{/users(page=${currentPage - 1}, size=${size}, sort=${sortField}, dir=${sortDir}, search=${search})}" th:text="#{previous}">Previous</a>
+                    </li>
+                    <li class="page-item" th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:classappend="${i == currentPage} ? 'active'">
+                        <a class="page-link" th:href="@{/users(page=${i}, size=${size}, sort=${sortField}, dir=${sortDir}, search=${search})}" th:text="${i + 1}">1</a>
+                    </li>
+                    <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                        <a class="page-link" th:href="@{/users(page=${currentPage + 1}, size=${size}, sort=${sortField}, dir=${sortDir}, search=${search})}" th:text="#{next}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
